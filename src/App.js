@@ -151,7 +151,6 @@ class Filter extends Component {
   render() {
     return (
       <div style={defaultStyle}>
-        <img />
         <input
           type="text"
           onKeyUp={(event) => this.props.onTextChange(event.target.value)}
@@ -166,7 +165,11 @@ class Playlist extends Component {
     let playlist = this.props.playlist;
     return (
       <div style={{ ...defaultStyle, display: "inline-block", width: "25%" }}>
-        <img />
+        <img
+          src={playlist.imageUrl}
+          alt="playlistImage"
+          style={{ width: "60px" }}
+        />
         <h3>{playlist.name}</h3>
         <ul>
           {playlist.songs.map((song) => (
@@ -193,24 +196,24 @@ class App extends Component {
       this.setState({
         token: _token,
       });
-      //this.fetchUser(_token);
+      this.fetchUser(_token);
       this.fetchPlaylist(_token);
     }
   }
 
-  // fetchUser(token) {
-  //   $.ajax({
-  //     url: "https://api.spotify.com/v1/me",
-  //     type: "GET",
-  //     beforeSend: (xhr) => {
-  //       xhr.setRequestHeader("Authorization", "Bearer " + token);
-  //     },
-  //     success: (data) => {
-  //       this.setState({ serverData: { user: { name: data.display_name } } });
-  //       console.log("User Data", data);
-  //     },
-  //   });
-  // }
+  fetchUser(token) {
+    $.ajax({
+      url: "https://api.spotify.com/v1/me",
+      type: "GET",
+      beforeSend: (xhr) => {
+        xhr.setRequestHeader("Authorization", "Bearer " + token);
+      },
+      success: (data) => {
+        this.setState({ user: { name: data.display_name } });
+        console.log("User Data", data);
+      },
+    });
+  }
   fetchPlaylist(token) {
     $.ajax({
       url: "https://api.spotify.com/v1/me/playlists",
@@ -220,23 +223,22 @@ class App extends Component {
       },
       success: (data) => {
         this.setState({
-          serverData: {
-            user: {
-              playlists: data.items.map((item) => ({
-                name: item.name,
-                songs: [],
-              })),
-            },
-          },
+          playlists: data.items.map((item) => {
+            console.log("Playlist Items", data.items);
+            return {
+              name: item.name,
+              imageUrl: item.images[0].url,
+              songs: [],
+            };
+          }),
         });
-        console.log("Playlist Data", data);
       },
     });
   }
   render() {
     let playlistToRender =
-      this.state.serverData.user && this.state.serverData.user.playlists
-        ? this.state.serverData.user.playlists.filter((playlist) =>
+      this.state.user && this.state.playlists
+        ? this.state.playlists.filter((playlist) =>
             playlist.name
               .toLowerCase()
               .includes(this.state.filterString.toLowerCase())
@@ -245,10 +247,10 @@ class App extends Component {
     return (
       <div className="App">
         <Auth />
-        {this.state.serverData.user ? (
+        {this.state.user ? (
           <div>
             <h1 style={{ ...defaultStyle, "font-size": "54px" }}>
-              {this.state.serverData.user.name}'s Playlist
+              {this.state.user.name}'s Playlist
             </h1>
 
             <PlaylistCounter playlists={playlistToRender} />
