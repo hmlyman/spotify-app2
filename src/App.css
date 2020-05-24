@@ -1,21 +1,19 @@
+html,
+body {
+  background-color: darkslategrey;
+}
+
+body {
+  padding: 10%;
+}
+
 .App {
   text-align: center;
   background-color: darkslategrey;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
-  background-color: #282c34;
+  background-color: darkslategrey;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -25,20 +23,17 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+a {
+  color: white;
+}
+a:visited {
+  color: white;
+}
+a:hover {
+  background-color: white;
+  color: darkslategrey;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-h1 {
-  font-size: 54px;
-  color: #fff;
+a:active {
+  color: lightblue;
 }
